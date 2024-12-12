@@ -1,6 +1,8 @@
+ 
 import React, { useEffect, useRef, useState } from 'react'
 import todo_icon from '../assets/todo_icon.png'
 import TodoItems from './TodoItems'
+import EditTodo from './EditTodo'
 
 const Todo = () => {
 
@@ -19,17 +21,18 @@ const Todo = () => {
             id: Date.now(),
             text: inputText,
             isComplete: false,
+            isEditing: false,
         }
 
         setTodoList((prev) => [...prev, newTodo]);
         inputRef.current.value = "";
-    }
+    };
 
     const deleteTodo = (id) => {
         setTodoList((prevTodos) => {
             return prevTodos.filter((todo) => todo.id !== id);
-        })
-    }
+        });
+    };
 
     const toggle = (id) => {
         setTodoList((prevTodos) => {
@@ -38,16 +41,41 @@ const Todo = () => {
                     return { ...todo, isComplete: !todo.isComplete }
                 }
                 return todo;
-            })
-        })
-    }
+            });
+        });
+    };
 
-    useEffect(()=> {
+    const edit = (id) => {
+        setTodoList((prevTodos) => {
+            return prevTodos.map((todo) => {
+                if (todo.id === id) {
+                    return { ...todo, isEditing: !todo.isEditing }
+                }
+                return todo;
+            });
+        });
+    };
+
+    const editTodo = (id, inputText) => {
+        if (inputText === "") {
+            return null;
+        }
+        setTodoList((prevTodos => {
+            return prevTodos.map((todo) => {
+                if (todo.id === id) {
+                    return { ...todo, text: inputText, isEditing: false }
+                }
+                return todo;
+            });
+        }));
+    };
+
+    useEffect(() => {
         localStorage.setItem("todos", JSON.stringify(todoList));
     }, [todoList]);
 
     return (
-        <div className='bg-white place-self-center w-11/12 max-w-md min-h-[550px] flex flex-col p-7 rounded-xl'>
+        <div className='bg-white place-self-center w-11/12 max-w-md max-h-[550px] min-h-[550px] flex flex-col p-7 rounded-xl gap-1'>
 
             {/* ------------- title ----------------------- */}
 
@@ -59,16 +87,17 @@ const Todo = () => {
 
             {/* ------------- input box ----------------------- */}
 
-            <div className='flex items-center my-7 bg-gray-200 rounded-full h-14'>
-                <input ref={inputRef} type="text" placeholder='Add your task' className='bg-transparent border-0 outline-none flex-1 pl-7 pr-2 h-full placeholder-slate-500 cursor-pointer' />
-                <button onClick={add} className='border-none rounded-full bg-green-400 h-full w-32 hover:bg-green-500'>ADD</button>
+            <div className='flex items-center my-7 bg-gray-200 rounded-full min-h-14 hover:shadow'>
+                <input ref={inputRef} type="text" placeholder='Add your task' className='bg-transparent border-0 outline-none flex-1 pl-7 pr-2 h-14 placeholder-slate-500 cursor-pointer hover:placeholder-slate-600' />
+                <button onClick={add} className='border-none rounded-full bg-green-400 h-14 w-32 hover:bg-green-500'>ADD</button>
             </div>
 
             {/* ------------- to-do list ----------------------- */}
 
-            <div>
+            <div className='overflow-auto scrollbar-hide '>
                 {todoList.map((item, index) => {
-                    return <TodoItems key={index} text={item.text} id={item.id} isComplete={item.isComplete} deleteTodo={deleteTodo} toggle={toggle} />
+                    return (!item.isEditing ? <TodoItems key={index} text={item.text} id={item.id} isComplete={item.isComplete} deleteTodo={deleteTodo} toggle={toggle} edit={edit} /> : <EditTodo 
+                        key={index} id={item.id} currentText={item.text} editTodo={editTodo} />)
                 })}
             </div>
         </div>
@@ -76,3 +105,4 @@ const Todo = () => {
 }
 
 export default Todo
+ 
