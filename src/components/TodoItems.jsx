@@ -7,7 +7,7 @@ const TodoItems = ({ text, id, isComplete, deleteTodo, toggle }) => {
     return (
         <div className='flex items-center my-3 gap-2'>
             <div onClick={() => toggle(id)} className='flex flex-1 items-center cursor-pointer gap-1'>
-                <img src={isComplete ? tick : not_tick} alt="" className='w-7' />
+                <img src={isComplete ? tick : not_tick} alt="" className='w-7 hover:bg-gray-300 hover:rounded-full' />
                 <p className={`text-slate-900 text-[18px] decoration-slate-500 ${isComplete ? 'line-through' : null}`}>{text}</p>
             </div>
 
@@ -18,3 +18,4 @@ const TodoItems = ({ text, id, isComplete, deleteTodo, toggle }) => {
 }
 
 export default TodoItems
+ 

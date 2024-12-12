@@ -59,7 +59,7 @@ const Todo = () => {
 
             {/* ------------- input box ----------------------- */}
 
-            <div className='flex items-center my-7 bg-gray-300 rounded-full h-14'>
+            <div className='flex items-center my-7 bg-gray-200 rounded-full h-14'>
                 <input ref={inputRef} type="text" placeholder='Add your task' className='bg-transparent border-0 outline-none flex-1 pl-7 pr-2 h-full placeholder-slate-500 cursor-pointer' />
                 <button onClick={add} className='border-none rounded-full bg-green-400 h-full w-32 hover:bg-green-500'>ADD</button>
             </div>
